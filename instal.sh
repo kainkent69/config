@@ -2,7 +2,7 @@
 # set -e
 #
 # # Configuration
- USER_NAME=guest # user name
+ USER_NAME=lluie # user name
 #
 EXTENSIONS=(
 rocketseat.theme-omni
