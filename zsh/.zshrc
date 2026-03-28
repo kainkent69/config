@@ -1,31 +1,29 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
+# ... (Keep your P10k instant prompt block at the top)
 
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
+# 1. Fix Go Path (Don't source the bin folder)
+export GOPATH=$(go env GOPATH)
+export PATH="$GOPATH/bin:$PATH"
 
-export PATH="$(go env GOPATH)/bin:$PATH"
-source $HOME/go/bin/
+# 2. Powerlevel10k Theme
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 
+# 3. Aliases
+alias bruno='~/.local/bin/bruno/squashfs-root/AppRun'
 
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+# 4. P10k Config
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-
+# 5. NVM
 export NVM_DIR="$HOME/.config/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-# bun completions
-[ -s "/home/lluie/.bun/_bun" ] && source "/home/lluie/.bun/_bun"
-
-# bun
+# 6. Bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# 7. Zed (Fixed syntax)
+export PATH="$HOME/.local/bin/zed:$PATH"
+
+# 8. Bun completions
+[ -s "/home/lluie/.bun/_bun" ] && source "/home/lluie/.bun/_bun"
