@@ -1,59 +1,55 @@
 #!/bin/bash
-# set -e
-#
-# # Configuration
- USER_NAME=lluie # user name
-#
+set -e
+
+# Configuration
+USER_NAME=$USER
+
 EXTENSIONS=(
-rocketseat.theme-omni
-esbenp.prettier-vscode
-dbaeumer.vscode-eslint
-golang.go
-ms-vscode.cmake-tools
-steoates.autoimport
+    rocketseat.theme-omni
+    esbenp.prettier-vscode
+    dbaeumer.vscode-eslint
+    golang.go
+    ms-vscode.cmake-tools
+    steoates.autoimport
 )
 
-# # The script begins here.
-# pac() {
-#   pacman -Sy $1
-# }
-#
-# # Utilities
-# pac " noto-fonts-emoji  bashtop bat "
-#
-#
-#
-# # Sway & desktop tools
-# pac " slurp grim xorg-xwayland "
-#
-# # Services
-# systemctl enable NetworkManager.service
-#
-# # Environment
-# echo "MOZ_ENABLE_WAYLAND=1\nLIBSEAT_BACKEND=logind" > /etc/environment
-#
-# # Zsh + Oh My Zsh
-# # Disabled until I find a way to install it properly, I'm thinking on moving to slimzsh, time will tell.
-# # export RUNZSH=no
-# # sudo --user=$USER_NAME sh -c "wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
-# # git clone https://github.com/zsh-users/zsh-autosuggestions.git /home/$USER_NAME/.oh-my-zsh/plugins/zsh-autosuggestions
-# # git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /home/$USER_NAME/.oh-my-zsh/plugins/zsh-syntax-highlighting
-# # sudo --user=$USER_NAME sh -c "chsh -s $(which zsh)"
-#
-# # Dotfiles symlink farm
-cd /home/$USER_NAME/dotfiles
-stow --adopt -vt /home/$USER_NAME/. .config
-stow --adopt -vt /home/$USER_NAME/.images .images
-stow --adopt -vt /home/$USER_NAME zsh
+# Function to install packages (Arch Linux assumed)
+install_pkg() {
+    echo "Installing: $1"
+    sudo pacman -S --needed --noconfirm $1
+}
 
-chown -R $USER_NAME /home/$USER_NAME
+echo "Updating system..."
+sudo pacman -Syu --noconfirm
 
-# VSCode extensions
-for i in ${EXTENSIONS[@]}; do
-  sudo --user=$USER_NAME sh -c "code --force --install-extension $i"
+echo "Installing Core Utilities..."
+install_pkg "stow kitty starship bat bashtop noto-fonts-emoji"
+
+echo "Installing Nerd Fonts..."
+install_pkg "ttf-meslo-nerd ttf-cascadia-code-nerd ttf-iosevka-nerd ttf-jetbrains-mono-nerd"
+
+echo "Installing Hyprland Ecosystem..."
+install_pkg "hyprland hyprpaper hypridle hyprlock waybar wofi hyprshot"
+install_pkg "grim slurp wl-clipboard xorg-xwayland"
+
+echo "Configuring Environment..."
+sudo sh -c 'echo -e "MOZ_ENABLE_WAYLAND=1\nLIBSEAT_BACKEND=logind" > /etc/environment'
+
+echo "Stowing Dotfiles..."
+cd "$(dirname "$0")"
+
+# Use your existing stow script 'b' logic but cleaned up for $HOME
+stow --adopt -vt "$HOME" .config
+stow --adopt -vt "$HOME" .images
+stow --adopt -vt "$HOME" zsh
+stow --adopt -vt "$HOME" tmux
+stow --adopt -vt "$HOME" starship
+stow --adopt -vt "$HOME" hyprland -t "$HOME/.config/hypr"
+stow --adopt -vt "$HOME" kitty -t "$HOME/.config/kitty"
+
+echo "Installing VSCode Extensions..."
+for i in "${EXTENSIONS[@]}"; do
+    code --force --install-extension "$i"
 done
 
-# Git
-
-echo "Script has finished. Please reboot your PC using 'reboot' command."
-exit
+echo "Script has finished. Please reboot your PC."
