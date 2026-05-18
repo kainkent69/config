@@ -23,7 +23,7 @@ echo "Updating system..."
 sudo pacman -Syu --noconfirm
 
 echo "Installing Core Utilities..."
-install_pkg "stow kitty starship bat bashtop noto-fonts-emoji"
+install_pkg "stow kitty starship bat bashtop noto-fonts-emoji zoxide fzf lazygit eza"
 
 echo "Installing Nerd Fonts..."
 install_pkg "ttf-meslo-nerd ttf-cascadia-code-nerd ttf-iosevka-nerd ttf-jetbrains-mono-nerd"
